@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "jira",
+  "description": "jira",
+  "version": "1.0",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["system.display", "tabs"],
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "js": ["content.js", "jquery-3.6.1.min.js"]
+    }
+  ],
+  "action": { "default_popup": "popup.html" },
+  "commands": {
+    "jira_popup_shortcut": {
+      "suggested_key": {
+        "default": "Alt+5"
+      },
+      "description": "Run current page."
+    }
+  }
+}
