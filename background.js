@@ -1,3 +1,29 @@
+import { UPDATE_CONTEXT_MENU } from "./consts.js"
+import { getTicketNumber, getUrl } from "./shared.js"
+const CONTEXT_MENU_ID = "jira-viewer"
+function openUrl(info, tab) {
+  if (info.menuItemId !== CONTEXT_MENU_ID) {
+    return
+  }
+  chrome.tabs.create({
+    url: getUrl(getTicketNumber(info.selectionText)),
+  })
+}
+
+function updateContextMenu(text) {
+  chrome.contextMenus.update(CONTEXT_MENU_ID, {
+    contexts: ["selection"],
+    visible: getTicketNumber(text).length > 0,
+  })
+}
+
+chrome.contextMenus.create({
+  id: CONTEXT_MENU_ID,
+  title: "View Jira",
+  contexts: ["selection"],
+})
+chrome.contextMenus.onClicked.addListener(openUrl)
+
 function openPopup(tab) {
   const { windowId, url, index } = tab
   console.log("tab", url)
@@ -29,11 +55,6 @@ function openPopup(tab) {
 chrome.commands.onCommand.addListener(async (command) => {
   console.log(`Command "${command}" triggered`)
   if (command === "jira_popup_shortcut") {
-    // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    //   chrome.tabs.sendMessage(tabs[0].id, { action: command })
-    //   let [tab] = await chrome.tabs.query(queryOptions);
-    // })
-
     let queryOptions = { active: true, lastFocusedWindow: true }
     chrome.tabs.query(queryOptions).then((tab) => {
       console.log("tab", tab)
@@ -42,12 +63,9 @@ chrome.commands.onCommand.addListener(async (command) => {
   }
 })
 
-// chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-//   if (request.method == "REDIRECT_JIRA_URL") {
-//     // wait until tab is updated, then send the msg.
-
-//     console.log("info. windowId:", request.windowId, "index:", request.index)
-//   }
-
-//   return true
-// })
+chrome.runtime.onMessage.addListener(function (request) {
+  if (request.method == UPDATE_CONTEXT_MENU) {
+    const { text } = request
+    updateContextMenu(text)
+  }
+})

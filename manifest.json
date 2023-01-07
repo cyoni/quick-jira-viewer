@@ -4,13 +4,15 @@
   "description": "jira",
   "version": "1.0",
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
-  "permissions": ["system.display", "tabs"],
+  "permissions": ["system.display", "tabs", "contextMenus"],
   "content_scripts": [
     {
       "matches": ["https://*/*"],
-      "js": ["content.js", "jquery-3.6.1.min.js"]
+      "js": ["content.js", "jquery-3.6.1.min.js"],
+      "type": "module"
     }
   ],
   "action": { "default_popup": "popup.html" },
