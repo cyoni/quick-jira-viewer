@@ -13,6 +13,11 @@
       "matches": ["https://*/*"],
       "js": ["content.js", "jquery-3.6.1.min.js"],
       "type": "module"
+    },
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["content-branch.js", "jquery-3.6.1.min.js", "shared.js"],
+      "type": "module"
     }
   ],
   "action": { "default_popup": "popup.html" },
