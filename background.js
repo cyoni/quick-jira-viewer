@@ -1,6 +1,7 @@
 import { UPDATE_CONTEXT_MENU } from "./consts.js"
 import { getTicketNumber, getUrl } from "./shared.js"
 const CONTEXT_MENU_ID = "jira-viewer"
+
 function openUrl(info, tab) {
   if (info.menuItemId !== CONTEXT_MENU_ID) {
     return
@@ -68,4 +69,25 @@ chrome.runtime.onMessage.addListener(function (request) {
     const { text } = request
     updateContextMenu(text)
   }
+})
+
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  console.log("tab update:", changeInfo)
+  console.log("tab", tab)
+
+  const prPagePattern = /https:\/\/github.com\/.+\/.+\/pull\/\d+/g
+  const newPrPattern = /https:\/\/github.com\/.+\/.+\/compare\/.+/g
+
+  if (tab.url?.match(prPagePattern)) {
+    await chrome.tabs.sendMessage(tabId, {
+      method: "pr_page",
+    })
+  } else if (tab.url?.match(newPrPattern)) {
+    console.log("match!")
+    await chrome.tabs.sendMessage(tabId, {
+      method: "add-link-to-issue",
+    })
+  }
+
+  return true
 })

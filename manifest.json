@@ -15,8 +15,8 @@
       "type": "module"
     },
     {
-      "matches": ["https://github.com/*"],
-      "js": ["content-branch.js", "jquery-3.6.1.min.js", "shared.js"],
+      "matches": ["https://github.com/*/*/*/*"],
+      "js": ["content-branch.js", "jquery-3.6.1.min.js"],
       "type": "module"
     }
   ],
