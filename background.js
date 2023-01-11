@@ -71,6 +71,18 @@ chrome.runtime.onMessage.addListener(function (request) {
   }
 })
 
+function injectScript(script, tabId) {
+  chrome.scripting.executeScript(
+    {
+      target: { tabId: tabId },
+      files: [script],
+    },
+    () => {
+      console.log("script injected on", tabId)
+    }
+  )
+}
+
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   console.log("tab update:", changeInfo)
   console.log("tab", tab)
@@ -78,16 +90,29 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   const prPagePattern = /https:\/\/github.com\/.+\/.+\/pull\/\d+/g
   const newPrPattern = /https:\/\/github.com\/.+\/.+\/compare\/.+/g
 
-  if (tab.url?.match(prPagePattern)) {
-    await chrome.tabs.sendMessage(tabId, {
-      method: "pr_page",
-    })
-  } else if (tab.url?.match(newPrPattern)) {
-    console.log("match!")
-    await chrome.tabs.sendMessage(tabId, {
-      method: "add-link-to-issue",
-    })
-  }
+  if (changeInfo?.status !== "complete") return
 
-  return true
+  if (tab.url?.match(prPagePattern)) {
+    injectScript("script.js", tabId)
+  } else if (tab.url?.match(newPrPattern)) {
+    console.log("test script?!?!?")
+    injectScript("linkScript.js", tabId)
+  }
+})
+
+const queryOptions = { active: true, lastFocusedWindow: true }
+chrome.tabs.query(queryOptions).then((tab) => {
+  const tabId = tab[0].id
+  console.log("got tab >> ", tab[0])
+  console.log("tabId", tabId)
+
+  // chrome.scripting.executeScript(
+  //   {
+  //     target: { tabId: tabId },
+  //     files: ["script.js"],
+  //   },
+  //   () => {
+  //     console.log("script injected")
+  //   }
+  // )
 })

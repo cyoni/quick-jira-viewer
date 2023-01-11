@@ -7,16 +7,12 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["system.display", "tabs", "contextMenus"],
+  "permissions": ["system.display", "tabs", "contextMenus", "scripting"],
+  "host_permissions": ["*://github.com/*"],
   "content_scripts": [
     {
       "matches": ["https://*/*"],
       "js": ["content.js", "jquery-3.6.1.min.js"],
-      "type": "module"
-    },
-    {
-      "matches": ["https://github.com/*/*/*/*"],
-      "js": ["content-branch.js", "jquery-3.6.1.min.js"],
       "type": "module"
     }
   ],
