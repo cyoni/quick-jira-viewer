@@ -33,7 +33,7 @@ const addLinkToIssue = async () => {
   const branchInputValue = String(branchInputElement.value)
   const jiraNumber = getJiraNumber(branchName)
 
-  if (!branchInputValue.startsWith(jiraNumber)) {
+  if (jiraNumber && !branchInputValue.startsWith(jiraNumber)) {
     const newPrTitle = `${jiraNumber} - ${branchInputValue}`
     branchInputElement.value = newPrTitle
   }
