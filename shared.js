@@ -1,10 +1,31 @@
-import { DEFAULT_URL } from "./consts.js"
-
-export function getUrl(ticketNum) {
-  return DEFAULT_URL.replace("%s", ticketNum)
+function getUrl(ticketNum) {
+  return "https://xxxxxxx.atlassian.net/browse/%s".replace("%s", ticketNum)
 }
 
-export function getTicketNumber(text) {
+function waitForElm(selector) {
+  console.log("waiting for:", selector)
+  return new Promise((resolve) => {
+    if (document.querySelector(selector)) {
+      return resolve(document.querySelector(selector))
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      if (document.querySelector(selector)) {
+        console.log("found:", selector)
+
+        resolve(document.querySelector(selector))
+        observer.disconnect()
+      }
+    })
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    })
+  })
+}
+
+function getTicketNumber(text) {
   let result = ""
   const inputWithOnlyNumbers = text.match(/\d+/g)?.[0] || ""
   if (inputWithOnlyNumbers.length === 4) result = `SI-${inputWithOnlyNumbers}`

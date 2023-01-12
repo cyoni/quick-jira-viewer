@@ -5,25 +5,28 @@ function getJiraNumber(branchName) {
   return name ? String(name) : null
 }
 
-function waitForElm(selector) {
-  return new Promise((resolve) => {
-    if (document.querySelector(selector)) {
-      return resolve(document.querySelector(selector))
-    }
+// function waitForElm(selector) {
+//   console.log("waiting for:", selector)
+//   return new Promise((resolve) => {
+//     if (document.querySelector(selector)) {
+//       return resolve(document.querySelector(selector))
+//     }
 
-    const observer = new MutationObserver((mutations) => {
-      if (document.querySelector(selector)) {
-        resolve(document.querySelector(selector))
-        observer.disconnect()
-      }
-    })
+//     const observer = new MutationObserver((mutations) => {
+//       if (document.querySelector(selector)) {
+//         console.log("found:", selector)
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    })
-  })
-}
+//         resolve(document.querySelector(selector))
+//         observer.disconnect()
+//       }
+//     })
+
+//     observer.observe(document.body, {
+//       childList: true,
+//       subtree: true,
+//     })
+//   })
+// }
 
 console.log("hello from linkScript.js")
 ;(async () => {

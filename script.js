@@ -1,20 +1,29 @@
+
 function getJiraNumber(branchName) {
   const pattern = /(IN-(\d{5}))|(SI-(\d{4}))/i
   return String(branchName.match(pattern)?.[0])
 }
 
+
+
 ;(async () => {
-  // find element with class="js-issue-title"
   const issueTitle = document.querySelector(".js-issue-title")
   console.log("issueTitle", issueTitle)
-  issueTitle.innerHTML = "this is a test@@@@@"
+  //issueTitle.innerHTML = "this is a test@@@@@"
 
-  const branchNameElement = $(".head-ref .css-truncate-target")[0]
+  const branchNameElement = document.querySelector(
+    ".head-ref .css-truncate-target"
+  )
   console.log("branchNameElement", branchNameElement)
   const branchName = String(branchNameElement?.innerHTML)
   const jiraNumber = getJiraNumber(branchName)
+  console.log("jiraNumber", jiraNumber)
 
   const buttonsActionElement = await waitForElm(".gh-header-actions")
+
+  const jiraBtnElementCheck = document.getElementById("jira-btn")
+  if (jiraBtnElementCheck) return
+
   const btnElement = document.createElement("button")
   btnElement.id = "jira-btn"
   btnElement.className = "btn btn-sm"

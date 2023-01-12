@@ -1,6 +1,9 @@
-import { UPDATE_CONTEXT_MENU } from "./consts.js"
-import { getTicketNumber, getUrl } from "./shared.js"
+
+
 const CONTEXT_MENU_ID = "jira-viewer"
+
+function getTicketNumber(){console.log("test1")}
+function getUrl(){console.log("test2")}
 
 function openUrl(info, tab) {
   if (info.menuItemId !== CONTEXT_MENU_ID) {
@@ -65,7 +68,7 @@ chrome.commands.onCommand.addListener(async (command) => {
 })
 
 chrome.runtime.onMessage.addListener(function (request) {
-  if (request.method == UPDATE_CONTEXT_MENU) {
+  if (request.method == "UPDATE_CONTEXT_MENU") {
     const { text } = request
     updateContextMenu(text)
   }
@@ -75,7 +78,7 @@ function injectScript(script, tabId) {
   chrome.scripting.executeScript(
     {
       target: { tabId: tabId },
-      files: [script],
+      files: [script, "shared.js"],
     },
     () => {
       console.log("script injected on", tabId)
