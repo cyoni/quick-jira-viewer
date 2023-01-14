@@ -6,7 +6,7 @@ This chrome extension helps viewing a jira ticket quickly by pressing alt+5 and 
 
 1. When selecting a Jira number (that starts with IN or SI or composed of 4 or 5 numbers) a context menu appears:
 
-![](https://user-images.githubusercontent.com/44746539/212471431-1a9656dd-5508-4314-8902-d1659c114e51.png=400x200)
+<img src="https://user-images.githubusercontent.com/44746539/212471431-1a9656dd-5508-4314-8902-d1659c114e51.png" width=300 height=300>
 
 
 2. When creating a PR, the extension takes the Jira number from the branch name and prefixs it to the PR title:
