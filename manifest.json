@@ -4,19 +4,14 @@
   "description": "jira",
   "version": "1.0",
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
-  "permissions": ["system.display", "tabs", "contextMenus"],
+  "permissions": ["system.display", "tabs", "contextMenus", "scripting"],
+  "host_permissions": ["*://github.com/*"],
   "content_scripts": [
     {
       "matches": ["https://*/*"],
       "js": ["content.js", "jquery-3.6.1.min.js"],
-      "type": "module"
-    },
-    {
-      "matches": ["https://github.com/*/*/*/*"],
-      "js": ["content-branch.js", "jquery-3.6.1.min.js"],
       "type": "module"
     }
   ],

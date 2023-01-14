@@ -1,5 +1,3 @@
-import { getTicketNumber, getUrl } from "./shared.js"
-
 function setText(txt) {
   $("#number").focus()
   $("#number").val("")

@@ -1,6 +1,4 @@
-import { UPDATE_CONTEXT_MENU } from "./consts.js"
-import { getTicketNumber, getUrl } from "./shared.js"
-const CONTEXT_MENU_ID = "jira-viewer"
+importScripts("./shared.js")
 
 function openUrl(info, tab) {
   if (info.menuItemId !== CONTEXT_MENU_ID) {
@@ -27,19 +25,15 @@ chrome.contextMenus.onClicked.addListener(openUrl)
 
 function openPopup(tab) {
   const { windowId, url, index } = tab
-  console.log("tab", url)
   const newTab = !String(url).startsWith("chrome://")
   chrome.system.display.getInfo({ singleUnified: true }, (info) => {
     const wDimension = info[0].workArea
     const { top, left, height, width } = wDimension
-    console.log(top)
     const w = 440
     const h = 260
     const l = width / 2 - w / 2 + left
     const t = height / 2 - h / 2 + top
-    const newWindow = () => {
-      console.log("in new window function")
-    }
+    const newWindow = () => {}
     chrome.windows.create(
       {
         url: `popup.html?newTab=${newTab}&id=${windowId}&index=${index}`,
@@ -54,40 +48,40 @@ function openPopup(tab) {
   })
 }
 chrome.commands.onCommand.addListener(async (command) => {
-  console.log(`Command "${command}" triggered`)
   if (command === "jira_popup_shortcut") {
     let queryOptions = { active: true, lastFocusedWindow: true }
     chrome.tabs.query(queryOptions).then((tab) => {
-      console.log("tab", tab)
       openPopup(tab[0])
     })
   }
 })
 
 chrome.runtime.onMessage.addListener(function (request) {
-  if (request.method == UPDATE_CONTEXT_MENU) {
+  if (request.method == "UPDATE_CONTEXT_MENU") {
     const { text } = request
     updateContextMenu(text)
   }
 })
 
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  console.log("tab update:", changeInfo)
-  console.log("tab", tab)
+function injectScript(script, tabId) {
+  chrome.scripting.executeScript(
+    {
+      target: { tabId: tabId },
+      files: [script, "shared.js"],
+    },
+    () => {
+      console.log("script injected on", tabId)
+    }
+  )
+}
 
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   const prPagePattern = /https:\/\/github.com\/.+\/.+\/pull\/\d+/g
   const newPrPattern = /https:\/\/github.com\/.+\/.+\/compare\/.+/g
-
-  if (tab.url?.match(prPagePattern)) {
-    await chrome.tabs.sendMessage(tabId, {
-      method: "pr_page",
-    })
-  } else if (tab.url?.match(newPrPattern)) {
-    console.log("match!")
-    await chrome.tabs.sendMessage(tabId, {
-      method: "add-link-to-issue",
-    })
+  if (changeInfo?.status !== "complete" || !tab.url) return
+  if (tab.url.match(prPagePattern)) {
+    injectScript("script.js", tabId)
+  } else if (tab.url.match(newPrPattern)) {
+    injectScript("linkScript.js", tabId)
   }
-
-  return true
 })
