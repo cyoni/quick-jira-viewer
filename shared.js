@@ -1,5 +1,8 @@
+const CONTEXT_MENU_ID = "jira-viewer"
+const PATH = "https://xxxxxxx.atlassian.net/browse/%s"
+
 function getUrl(ticketNum) {
-  return "https://xxxxxxx.atlassian.net/browse/%s".replace("%s", ticketNum)
+  return PATH.replace("%s", ticketNum)
 }
 
 function waitForElm(selector) {

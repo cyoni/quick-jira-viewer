@@ -1,2 +1,0 @@
-
-export const UPDATE_CONTEXT_MENU = "UPDATE_CONTEXT_MENU"

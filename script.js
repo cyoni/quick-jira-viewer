@@ -4,8 +4,6 @@ function getJiraNumber(branchName) {
   return String(branchName.match(pattern)?.[0])
 }
 
-
-
 ;(async () => {
   const issueTitle = document.querySelector(".js-issue-title")
   console.log("issueTitle", issueTitle)

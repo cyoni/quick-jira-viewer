@@ -4,8 +4,7 @@
   "description": "jira",
   "version": "1.0",
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
   "permissions": ["system.display", "tabs", "contextMenus", "scripting"],
   "host_permissions": ["*://github.com/*"],
